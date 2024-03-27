@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ForewarnedPlugin", "Forewar
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lib", "Lib", "{27D172A8-338D-4F9B-9105-760516089551}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreamGlass.Core", "..\..\StreamGlass\StreamGlass.Core\StreamGlass.Core.csproj", "{65CC932F-3705-4B0D-BCDE-4F072E7E83FC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreamGlass.Core", "..\..\..\StreamGlass\StreamGlass.Core\StreamGlass.Core.csproj", "{65CC932F-3705-4B0D-BCDE-4F072E7E83FC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
