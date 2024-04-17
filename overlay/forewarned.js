@@ -9,19 +9,29 @@ class ForewarnedModule extends StreamGlassEventWebsocket
 	
 	#OnEvidences(data)
 	{
-		if (data.hasOwnProperty('evidence'))
+		var evidenceElement = document.getElementById(data);
+		if (evidenceElement.style.display === 'inline-block')
+			evidenceElement.style.display = 'none';
+		else
+			evidenceElement.style.display = 'inline-block';
+	}
+
+	#OnLoadEvidences(msg)
+	{
+		const data = JSON.parse(msg);
+		if (data.hasOwnProperty('evidences'))
 		{
-			var evidence = data['evidence'];
-			var evidenceElement = document.getElementById(evidence);
-			if (evidenceElement.style.display === 'inline-block')
-				evidenceElement.style.display = 'none';
-			else
-				evidenceElement.style.display = 'inline-block';
+			var evidences = data['evidences'];
+			for (var i = 0; i < evidences.length; i++)
+				this.#OnEvidences(evidences[i]);
 		}
+		super.UnholdEvents();
 	}
 
 	Init()
 	{
+		super.Get('/forewarned/evidences', this.#OnLoadEvidences.bind(this));
+		super.HoldEvents();
 		super.RegisterToEvent('forewarned_evidences', this.#OnEvidences.bind(this));
 		super.RegisterToEvent('forewarned_reset', this.#OnReset.bind(this));
 	}
