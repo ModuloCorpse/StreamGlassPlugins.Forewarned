@@ -1,4 +1,5 @@
-﻿using CorpseLib.Json;
+﻿using CorpseLib.DataNotation;
+using CorpseLib.Json;
 using CorpseLib.Web;
 using CorpseLib.Web.API;
 using CorpseLib.Web.Http;
@@ -33,6 +34,6 @@ namespace ForewarnedPlugin.Endpoint
                 return new(400, "Bad Request", "Missing evidence or reset parameter");
         }
 
-        protected override Response OnGetRequest(Request request) => new(200, "Ok", new JsonObject() { { "evidences", m_Core.Evidences } }.ToNetworkString(), MIME.APPLICATION.JSON);
+        protected override Response OnGetRequest(Request request) => new(200, "Ok", JsonParser.NetStr(new DataObject() { { "evidences", m_Core.Evidences } }), MIME.APPLICATION.JSON);
     }
 }
