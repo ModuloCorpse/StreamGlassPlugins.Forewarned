@@ -1,11 +1,13 @@
 ﻿using CorpseLib.Actions;
+using StreamGlass.Core;
 
 namespace ForewarnedPlugin.Action
 {
-    public class ForwarnedEvidenceAction(Core core) : AAction(ms_Definition)
+    public class ForwarnedEvidenceAction(Core core) : AStreamGlassAction(ms_Definition)
     {
-        private readonly static ActionDefinition ms_Definition = new ActionDefinition("ForewarnedEvidence")
-            .AddArgument<string>("evidence");
+        private readonly static ActionDefinition ms_Definition = new ActionDefinition("ForewarnedEvidence", "Toggle an evidence")
+            .AddArgument<string>("evidence", "Evidence to toggle");
+        public override bool AllowRemoteCall => true;
 
         private readonly Core m_Core = core;
 

@@ -20,7 +20,7 @@ namespace ForewarnedPlugin
         {
             m_Evidences.Clear();
             StreamGlassCanals.Trigger(ForewarnedPlugin.Canals.RESET);
-            StreamGlassCLI.ExecuteCommand("TimerStop forewarned");
+            StreamGlassActions.Call("TimerStop", "forewarned");
         }
     }
 }

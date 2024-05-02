@@ -25,11 +25,48 @@ namespace ForewarnedPlugin
             StreamGlassCanals.NewCanal<string>(Canals.EVIDENCES);
             StreamGlassCanals.NewCanal(Canals.RESET);
 
-            StreamGlassActions.AddAction(new ForwarnedEvidenceAction(m_Core), false, false, true);
-            StreamGlassActions.AddAction(new ForwarnedResetAction(m_Core), false, false, true);
+            StreamGlassActions.AddAction(new ForwarnedEvidenceAction(m_Core));
+            StreamGlassActions.AddAction(new ForwarnedResetAction(m_Core));
         }
 
-        protected override void OnInit() { }
+        protected override void OnInit()
+        {
+            StreamGlassActions.Call("TimerCreate", new Dictionary<string, object?>
+            {
+                { "duration", 180 },
+                { "id", "forewarned3minutes" },
+                { "family", "forewarned" },
+                { "string_source", "timer_forewarned" }
+            });
+            StreamGlassActions.Call("TimerCreate", new Dictionary<string, object?>
+            {
+                { "duration", 360 },
+                { "id", "forewarned6minutes" },
+                { "family", "forewarned" },
+                { "string_source", "timer_forewarned" }
+            });
+            StreamGlassActions.Call("TimerCreate", new Dictionary<string, object?>
+            {
+                { "duration", 540 },
+                { "id", "forewarned9minutes" },
+                { "family", "forewarned" },
+                { "string_source", "timer_forewarned" }
+            });
+            StreamGlassActions.Call("TimerCreate", new Dictionary<string, object?>
+            {
+                { "duration", 720 },
+                { "id", "forewarned12minutes" },
+                { "family", "forewarned" },
+                { "string_source", "timer_forewarned" }
+            });
+            StreamGlassActions.Call("TimerCreate", new Dictionary<string, object?>
+            {
+                { "duration", 900 },
+                { "id", "forewarned15minutes" },
+                { "family", "forewarned" },
+                { "string_source", "timer_forewarned" }
+            });
+        }
 
         public AEndpoint[] GetEndpoints() => [
             new ForewarnedEvidencesEndpoint(m_Core)

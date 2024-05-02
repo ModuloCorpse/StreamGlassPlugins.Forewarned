@@ -1,10 +1,12 @@
 ﻿using CorpseLib.Actions;
+using StreamGlass.Core;
 
 namespace ForewarnedPlugin.Action
 {
-    public class ForwarnedResetAction(Core core) : AAction(ms_Definition)
+    public class ForwarnedResetAction(Core core) : AStreamGlassAction(ms_Definition)
     {
-        private readonly static ActionDefinition ms_Definition = new("ForewarnedReset");
+        private readonly static ActionDefinition ms_Definition = new("ForewarnedReset", "Reset all evidences and timers");
+        public override bool AllowRemoteCall => true;
 
         private readonly Core m_Core = core;
 
