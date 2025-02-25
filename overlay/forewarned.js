@@ -10,10 +10,37 @@ class ForewarnedModule extends StreamGlassEventWebsocket
 	#OnEvidences(data)
 	{
 		var evidenceElement = document.getElementById(data);
+		//var ruleOutElement = evidenceElement.getElementsByClassName("rule_out_img");
 		if (evidenceElement.style.display === 'inline-block')
-			evidenceElement.style.display = 'none';
+		{
+			//if (ruleOutElement.style.display === 'inline-block')
+			//	ruleOutElement.style.display = 'none';
+			//else
+				evidenceElement.style.display = 'none';
+		}
 		else
+		{
 			evidenceElement.style.display = 'inline-block';
+			//ruleOutElement.style.display = 'none';
+		}
+	}
+
+	#OnRuledOutEvidences(data)
+	{
+		var evidenceElement = document.getElementById(data);
+		var ruleOutElement = evidenceElement.getElementsByClassName("rule_out_img");
+		if (evidenceElement.style.display === 'inline-block')
+		{
+			if (ruleOutElement.style.display === 'none')
+				ruleOutElement.style.display = 'inline-block';
+			else
+				evidenceElement.style.display = 'none';
+		}
+		else
+		{
+			evidenceElement.style.display = 'inline-block';
+			ruleOutElement.style.display = 'inline-block';
+		}
 	}
 
 	#OnLoadEvidences(msg)
@@ -34,6 +61,7 @@ class ForewarnedModule extends StreamGlassEventWebsocket
 		super.HoldEvents();
 		super.RegisterToEvent('forewarned_evidences', this.#OnEvidences.bind(this));
 		super.RegisterToEvent('forewarned_reset', this.#OnReset.bind(this));
+		//super.RegisterToEvent('forewarned_rule_out', this.#OnRuledOutEvidences.bind(this));
 	}
 }
 

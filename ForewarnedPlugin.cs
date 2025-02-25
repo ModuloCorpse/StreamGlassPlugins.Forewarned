@@ -12,6 +12,7 @@ namespace ForewarnedPlugin
         {
             public static readonly string EVIDENCES = "forewarned_evidences";
             public static readonly string RESET = "forewarned_reset";
+            public static readonly string RULE_OUT = "forewarned_rule_out";
         }
 
         private readonly Core m_Core = new();
@@ -23,10 +24,12 @@ namespace ForewarnedPlugin
         protected override void OnLoad()
         {
             StreamGlassCanals.NewCanal<string>(Canals.EVIDENCES);
+            StreamGlassCanals.NewCanal<string>(Canals.RULE_OUT);
             StreamGlassCanals.NewCanal(Canals.RESET);
 
             StreamGlassActions.AddAction(new ForwarnedEvidenceAction(m_Core));
             StreamGlassActions.AddAction(new ForwarnedResetAction(m_Core));
+            StreamGlassActions.AddAction(new ForwarnedRuleOutEvidenceAction(m_Core));
         }
 
         protected override void OnInit()
@@ -69,7 +72,8 @@ namespace ForewarnedPlugin
         }
 
         public AEndpoint[] GetEndpoints() => [
-            new ForewarnedEvidencesEndpoint(m_Core)
+            new ForewarnedEvidencesEndpoint(m_Core),
+            new ForewarnedRuleOutEvidencesEndpoint(m_Core)
         ];
 
         protected override void OnUnload() { }

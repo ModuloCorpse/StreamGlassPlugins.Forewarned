@@ -1,9 +1,17 @@
+.rule_out_img {
+    width: 100px;
+    height: 100px;
+    margin-left: -100px;
+    display: none;
+}
+
 .evidence_img {
     width: 100px;
     height: 100px;
 }
 
 .evidence_div {
+    position: relative;
     display: none;
 }
 
