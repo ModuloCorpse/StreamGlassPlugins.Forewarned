@@ -7,6 +7,44 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="overlay\assets\cross.png" />
+    <None Remove="overlay\assets\destruction.png" />
+    <None Remove="overlay\assets\disturbed_tombs.png" />
+    <None Remove="overlay\assets\electronic_disturbance.png" />
+    <None Remove="overlay\assets\extinguish_flames.png" />
+    <None Remove="overlay\assets\footsteps.png" />
+    <None Remove="overlay\assets\magnetic_distortion.png" />
+    <None Remove="overlay\assets\metallic_signature.png" />
+    <None Remove="overlay\assets\radar_detection.png" />
+    <None Remove="overlay\assets\radioactivity.png" />
+    <None Remove="overlay\assets\reanimation.png" />
+    <None Remove="overlay\assets\tremors.png" />
+    <None Remove="overlay\assets\vocal_response.png" />
+    <None Remove="overlay\forewarned.css" />
+    <None Remove="overlay\forewarned.html" />
+    <None Remove="overlay\forewarned.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="overlay\assets\cross.png" />
+    <EmbeddedResource Include="overlay\assets\destruction.png" />
+    <EmbeddedResource Include="overlay\assets\disturbed_tombs.png" />
+    <EmbeddedResource Include="overlay\assets\electronic_disturbance.png" />
+    <EmbeddedResource Include="overlay\assets\extinguish_flames.png" />
+    <EmbeddedResource Include="overlay\assets\footsteps.png" />
+    <EmbeddedResource Include="overlay\assets\magnetic_distortion.png" />
+    <EmbeddedResource Include="overlay\assets\metallic_signature.png" />
+    <EmbeddedResource Include="overlay\assets\radar_detection.png" />
+    <EmbeddedResource Include="overlay\assets\radioactivity.png" />
+    <EmbeddedResource Include="overlay\assets\reanimation.png" />
+    <EmbeddedResource Include="overlay\assets\tremors.png" />
+    <EmbeddedResource Include="overlay\assets\vocal_response.png" />
+    <EmbeddedResource Include="overlay\forewarned.css" />
+    <EmbeddedResource Include="overlay\forewarned.html" />
+    <EmbeddedResource Include="overlay\forewarned.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\..\StreamGlass\StreamGlass.Core\StreamGlass.Core.csproj" />
   </ItemGroup>
 
