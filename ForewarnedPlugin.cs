@@ -1,6 +1,8 @@
-﻿using CorpseLib.Web.API;
+﻿using CorpseLib.DataNotation;
+using CorpseLib.Web.API;
 using ForewarnedPlugin.Action;
 using ForewarnedPlugin.Endpoint;
+using ForewarnedPlugin.overlay;
 using StreamGlass.Core;
 using StreamGlass.Core.API.Overlay;
 using StreamGlass.Core.Plugin;
@@ -9,19 +11,18 @@ namespace ForewarnedPlugin
 {
     public class ForewarnedPlugin : APlugin, IAPIPlugin, IOverlayPlugin
     {
-        public static class Canals
-        {
-            public static readonly string EVIDENCES = "forewarned_evidences";
-            public static readonly string RESET = "forewarned_reset";
-            public static readonly string RULE_OUT = "forewarned_rule_out";
-        }
-
         private readonly Core m_Core = new();
         private readonly Overlay m_Overlay = new();
 
+        static ForewarnedPlugin()
+        {
+            DataHelper.RegisterSerializer(new Mejai.DataSerializer());
+            DataHelper.RegisterSerializer(new Evidence.DataSerializer());
+        }
+
         public ForewarnedPlugin() : base("Forewarned")
         {
-            m_Overlay.AddRootAssemblyResource("forewarned.html", "ForewarnedPlugin.overlay.forewarned.html");
+            m_Overlay.AddRootResource("forewarned.html", new ForewarnedRootEndpoint(m_Core));
             m_Overlay.AddAssemblyResource("forewarned.css", "ForewarnedPlugin.overlay.forewarned.css");
             m_Overlay.AddAssemblyResource("forewarned.js", "ForewarnedPlugin.overlay.forewarned.js");
             m_Overlay.AddAssemblyResource("assets/cross.png", "ForewarnedPlugin.overlay.assets.cross.png");
@@ -43,10 +44,6 @@ namespace ForewarnedPlugin
 
         protected override void OnLoad()
         {
-            StreamGlassCanals.NewCanal<string>(Canals.EVIDENCES);
-            StreamGlassCanals.NewCanal<string>(Canals.RULE_OUT);
-            StreamGlassCanals.NewCanal(Canals.RESET);
-
             StreamGlassActions.AddAction(new ForwarnedEvidenceAction(m_Core));
             StreamGlassActions.AddAction(new ForwarnedResetAction(m_Core));
             StreamGlassActions.AddAction(new ForwarnedRuleOutEvidenceAction(m_Core));
@@ -93,10 +90,7 @@ namespace ForewarnedPlugin
 
         public Overlay[] GetOverlays() => [ m_Overlay ];
 
-        public AEndpoint[] GetEndpoints() => [
-            new ForewarnedEvidencesEndpoint(m_Core),
-            new ForewarnedRuleOutEvidencesEndpoint(m_Core)
-        ];
+        public AEndpoint[] GetEndpoints() => [ new ForewarnedEvidencesEndpoint(m_Core) ];
 
         protected override void OnUnload() { }
     }

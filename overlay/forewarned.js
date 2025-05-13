@@ -1,67 +1,115 @@
-class ForewarnedModule extends StreamGlassEventWebsocket
+class ForewarnedModule
 {
-	#OnReset(_event)
-	{
-		var slides = document.getElementsByClassName("evidence_div");
-		for (var i = 0; i < slides.length; i++)
-   			slides.item(i).style.display = 'none';
+	#socket;
+
+	constructor() {
+		this.#socket = new WebSocket('ws://' + location.host + '/overlay/plugin/forewarned');
+		this.#socket.onmessage = this.#OnMessage.bind(this);
 	}
-	
-	#OnEvidences(data)
-	{
-		var evidenceElement = document.getElementById(data);
-		//var ruleOutElement = evidenceElement.getElementsByClassName("rule_out_img");
-		if (evidenceElement.style.display === 'inline-block')
-		{
-			//if (ruleOutElement.style.display === 'inline-block')
-			//	ruleOutElement.style.display = 'none';
-			//else
-				evidenceElement.style.display = 'none';
-		}
-		else
-		{
-			evidenceElement.style.display = 'inline-block';
-			//ruleOutElement.style.display = 'none';
+
+	#OnMejais(data) {
+		for (var i = 0; i < data.length; i++) {
+			var mejai = data[i];
+			//TODO
 		}
 	}
 
-	#OnRuledOutEvidences(data)
-	{
-		var evidenceElement = document.getElementById(data);
-		var ruleOutElement = evidenceElement.getElementsByClassName("rule_out_img");
-		if (evidenceElement.style.display === 'inline-block')
-		{
-			if (ruleOutElement.style.display === 'none')
-				ruleOutElement.style.display = 'inline-block';
+	#UpdateEvidence(data) {
+		if (data.hasOwnProperty('id') && data.hasOwnProperty('is_found') && data.hasOwnProperty('is_ruled_out')) {
+			var isFound = data['is_found'];
+			var isRuledOut = data['is_ruled_out'];
+			var evidenceDiv = document.getElementById(data['id']);
+			var evidenceElement = evidenceDiv.getElementsByClassName("evidence_img_div").item(0);
+			var ruleOutElement = evidenceDiv.getElementsByClassName("rule_out_img_div").item(0);
+			if (isFound || isRuledOut)
+				evidenceElement.style.display = 'inline-block';
 			else
 				evidenceElement.style.display = 'none';
-		}
-		else
-		{
-			evidenceElement.style.display = 'inline-block';
-			ruleOutElement.style.display = 'inline-block';
+
+			if (isRuledOut)
+				ruleOutElement.style.display = 'inline-block';
+			else
+				ruleOutElement.style.display = 'none';
 		}
 	}
 
-	#OnLoadEvidences(msg)
-	{
-		const data = JSON.parse(msg);
-		if (data.hasOwnProperty('evidences'))
-		{
-			var evidences = data['evidences'];
-			for (var i = 0; i < evidences.length; i++)
-				this.#OnEvidences(evidences[i]);
+	#CreateEvidence(data) {
+		if (data.hasOwnProperty('id') &&
+			data.hasOwnProperty('path') &&
+			data.hasOwnProperty('is_found') &&
+			data.hasOwnProperty('is_ruled_out')) {
+			var id = data['id'];
+			var isFound = data['is_found'];
+			var isRuledOut = data['is_ruled_out'];
+
+			var evidenceDiv = document.createElement('div');
+			evidenceDiv.id = id;
+			evidenceDiv.className = 'evidence_div';
+
+			var evidenceImgDiv = document.createElement('div');
+			evidenceImgDiv.className = 'evidence_img_div';
+			var evidenceImg = document.createElement('img');
+			evidenceImg.className = 'evidence_img';
+			evidenceImg.src = data['path'];
+			evidenceImgDiv.appendChild(evidenceImg);
+			if (isFound || isRuledOut)
+				evidenceImgDiv.style.display = 'inline-block';
+			else
+				evidenceImgDiv.style.display = 'none';
+
+			var ruleOutImgDiv = document.createElement('div');
+			ruleOutImgDiv.className = 'rule_out_img_div';
+			var ruleOutImg = document.createElement('img');
+			ruleOutImg.className = 'rule_out_img';
+			ruleOutImg.src = 'forewarned/assets/cross.png';
+			ruleOutImgDiv.appendChild(ruleOutImg);
+			if (isRuledOut)
+				ruleOutImgDiv.style.display = 'inline-block';
+			else
+				ruleOutImgDiv.style.display = 'none';
+
+            evidenceDiv.appendChild(evidenceImgDiv);
+			evidenceDiv.appendChild(ruleOutImgDiv);
+			document.getElementById('evidences').appendChild(evidenceDiv);
 		}
-		super.UnholdEvents();
 	}
 
-	Init()
-	{
-		super.Get('/forewarned/evidences', this.#OnLoadEvidences.bind(this));
-		super.HoldEvents();
-		super.RegisterToEvent('forewarned_evidences', this.#OnEvidences.bind(this));
-		super.RegisterToEvent('forewarned_reset', this.#OnReset.bind(this));
-		//super.RegisterToEvent('forewarned_rule_out', this.#OnRuledOutEvidences.bind(this));
+	#OnMessage(event) {
+		var eventJson = JSON.parse(event.data);
+		if (eventJson.hasOwnProperty('type')) {
+			var type = eventJson['type'];
+			switch (type) {
+				case 'welcome':
+					{
+						if (eventJson.hasOwnProperty('evidences')) {
+							var evidences = eventJson['evidences'];
+							for (var i = 0; i < evidences.length; i++)
+								this.#CreateEvidence(evidences[i]);
+						}
+						if (eventJson.hasOwnProperty('mejais'))
+							this.#OnMejais(eventJson['mejais']);
+						break;
+					}
+				case 'reset':
+					{
+						var slides = document.getElementsByClassName("evidence_div");
+						for (var i = 0; i < slides.length; i++) {
+							var evidenceDiv = slides.item(i);
+							evidenceDiv.getElementsByClassName("evidence_img_div").item(0).style.display = 'none';
+							evidenceDiv.getElementsByClassName("rule_out_img_div").item(0).style.display = 'none';
+						}
+						break;
+					}
+				case 'evidence':
+					{
+						if (eventJson.hasOwnProperty('evidence'))
+							this.#UpdateEvidence(eventJson['evidence']);
+						if (eventJson.hasOwnProperty('mejais'))
+							this.#OnMejais(eventJson['mejais']);
+						break;
+					}
+			}
+		}
 	}
 }
 

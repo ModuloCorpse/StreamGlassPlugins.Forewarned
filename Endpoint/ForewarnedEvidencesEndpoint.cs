@@ -1,7 +1,4 @@
-﻿using CorpseLib.DataNotation;
-using CorpseLib.Json;
-using CorpseLib.Web;
-using CorpseLib.Web.API;
+﻿using CorpseLib.Web.API;
 using CorpseLib.Web.Http;
 
 namespace ForewarnedPlugin.Endpoint
@@ -12,10 +9,25 @@ namespace ForewarnedPlugin.Endpoint
 
         protected override Response OnPostRequest(Request request)
         {
-            if (request.HaveParameter("evidence") && request.HaveParameter("reset"))
-                return new(400, "Bad Request", "Request have both evidence and reset parameter");
+            int requestCount = 0;
+            bool haveEvidence = request.HaveParameter("evidence");
+            if (haveEvidence)
+                requestCount++;
 
-            if (request.HaveParameter("evidence"))
+            bool haveRuleOut = request.HaveParameter("rule_out");
+            if (haveRuleOut)
+                requestCount++;
+
+            bool haveReset = request.HaveParameter("reset");
+            if (haveReset)
+                requestCount++;
+
+            if (requestCount > 1)
+                return new(400, "Bad Request", "Request have multiples request parameters");
+            if (requestCount < 1)
+                return new(400, "Bad Request", "Missing request parameter");
+
+            if (haveEvidence)
             {
                 string evidence = request.GetParameter("evidence");
                 if (!string.IsNullOrEmpty(evidence))
@@ -25,15 +37,21 @@ namespace ForewarnedPlugin.Endpoint
                 }
                 return new(400, "Bad Request", "Missing evidence value in request parameters");
             }
-            else if (request.HaveParameter("reset"))
+            else if (haveRuleOut)
+            {
+                string evidence = request.GetParameter("rule_out");
+                if (!string.IsNullOrEmpty(evidence))
+                {
+                    m_Core.RuleOutToggle(evidence);
+                    return new(200, "Ok");
+                }
+                return new(400, "Bad Request", "Missing evidence value in request parameters");
+            }
+            else //haveReset is true
             {
                 m_Core.Reset();
                 return new(200, "Ok");
             }
-            else
-                return new(400, "Bad Request", "Missing evidence or reset parameter");
         }
-
-        protected override Response OnGetRequest(Request request) => new(200, "Ok", JsonParser.NetStr(new DataObject() { { "evidences", m_Core.Evidences } }), MIME.APPLICATION.JSON);
     }
 }

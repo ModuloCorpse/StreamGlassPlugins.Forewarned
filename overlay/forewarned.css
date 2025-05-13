@@ -1,18 +1,21 @@
-.rule_out_img {
-    width: 100px;
-    height: 100px;
+.rule_out_img_div {
+    width: fit-content;
     margin-left: -100px;
-    display: none;
 }
 
-.evidence_img {
+.evidence_img_div {
+    width: fit-content;
+}
+
+.rule_out_img, .evidence_img {
     width: 100px;
     height: 100px;
 }
 
 .evidence_div {
     position: relative;
-    display: none;
+    width: fit-content;
+    display: inline-block;
 }
 
 .evidences {
