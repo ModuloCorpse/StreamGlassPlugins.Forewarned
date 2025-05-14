@@ -1,9 +1,9 @@
 ﻿using CorpseLib.Web.API;
 using CorpseLib.Web.Http;
 
-namespace ForewarnedPlugin.Endpoint
+namespace ForewarnedPlugin.EvidenceGame.Core.Endpoint
 {
-    public class ForewarnedEvidencesEndpoint(Core core) : AHTTPEndpoint("/evidences")
+    public class EvidencesEndpoint(Core core) : AHTTPEndpoint()
     {
         private readonly Core m_Core = core;
 

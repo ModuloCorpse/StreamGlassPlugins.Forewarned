@@ -1,9 +1,9 @@
 ﻿using CorpseLib.Actions;
 using StreamGlass.Core;
 
-namespace ForewarnedPlugin.Action
+namespace ForewarnedPlugin.EvidenceGame.Core.Action
 {
-    public class ForwarnedEvidenceAction(Core core) : AStreamGlassAction(ms_Definition)
+    public class EvidenceAction(Core core) : AStreamGlassAction(ms_Definition)
     {
         private readonly static ActionDefinition ms_Definition = new ActionDefinition("ForewarnedEvidence", "Toggle an evidence")
             .AddArgument<string>("evidence", "Evidence to toggle");

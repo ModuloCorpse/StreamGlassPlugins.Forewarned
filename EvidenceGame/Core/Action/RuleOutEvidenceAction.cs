@@ -1,9 +1,9 @@
 ﻿using CorpseLib.Actions;
 using StreamGlass.Core;
 
-namespace ForewarnedPlugin.Action
+namespace ForewarnedPlugin.EvidenceGame.Core.Action
 {
-    public class ForwarnedRuleOutEvidenceAction(Core core) : AStreamGlassAction(ms_Definition)
+    public class RuleOutEvidenceAction(Core core) : AStreamGlassAction(ms_Definition)
     {
         private readonly static ActionDefinition ms_Definition = new ActionDefinition("ForewarnedRuleOut", "Toggle rule out an evidence")
             .AddArgument<string>("evidence", "Evidence to toggle rule out");

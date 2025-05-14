@@ -1,7 +1,7 @@
 ﻿using CorpseLib.DataNotation;
 using CorpseLib;
 
-namespace ForewarnedPlugin
+namespace ForewarnedPlugin.EvidenceGame.Core
 {
     public class Evidence(string name, string assetPath)
     {

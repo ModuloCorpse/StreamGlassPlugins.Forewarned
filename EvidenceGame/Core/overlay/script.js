@@ -3,14 +3,18 @@ class ForewarnedModule
 	#socket;
 
 	constructor() {
-		this.#socket = new WebSocket('ws://' + location.host + '/overlay/plugin/forewarned');
+		this.#socket = new WebSocket('ws://' + location.host + location.pathname);
 		this.#socket.onmessage = this.#OnMessage.bind(this);
 	}
 
-	#OnMejais(data) {
-		for (var i = 0; i < data.length; i++) {
-			var mejai = data[i];
-			//TODO
+	#CreateEntity(data) {
+		//TODO
+	}
+
+	#UpdateEntity(data) {
+		if (data.hasOwnProperty('name') && data.hasOwnProperty('is_found') && data.hasOwnProperty('is_ruled_out')) {
+			var isFound = data['is_found'];
+			var isRuledOut = data['is_ruled_out'];
 		}
 	}
 
@@ -61,7 +65,7 @@ class ForewarnedModule
 			ruleOutImgDiv.className = 'rule_out_img_div';
 			var ruleOutImg = document.createElement('img');
 			ruleOutImg.className = 'rule_out_img';
-			ruleOutImg.src = 'forewarned/assets/cross.png';
+			ruleOutImg.src = 'assets/cross.png';
 			ruleOutImgDiv.appendChild(ruleOutImg);
 			if (isRuledOut)
 				ruleOutImgDiv.style.display = 'inline-block';
@@ -86,8 +90,11 @@ class ForewarnedModule
 							for (var i = 0; i < evidences.length; i++)
 								this.#CreateEvidence(evidences[i]);
 						}
-						if (eventJson.hasOwnProperty('mejais'))
-							this.#OnMejais(eventJson['mejais']);
+						if (eventJson.hasOwnProperty('entities')) {
+                            var entities = eventJson['entities'];
+							for (var i = 0; i < entities.length; i++)
+								this.#CreateEntity(entities[i]);
+						}
 						break;
 					}
 				case 'reset':
@@ -104,8 +111,11 @@ class ForewarnedModule
 					{
 						if (eventJson.hasOwnProperty('evidence'))
 							this.#UpdateEvidence(eventJson['evidence']);
-						if (eventJson.hasOwnProperty('mejais'))
-							this.#OnMejais(eventJson['mejais']);
+						if (eventJson.hasOwnProperty('entities')) {
+							var entities = eventJson['entities'];
+							for (var i = 0; i < entities.length; i++)
+								this.#UpdateEntity(entities[i]);
+						}
 						break;
 					}
 			}

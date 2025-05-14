@@ -1,53 +1,44 @@
-﻿using CorpseLib.DataNotation;
-using CorpseLib.Web.API;
-using ForewarnedPlugin.Action;
-using ForewarnedPlugin.Endpoint;
-using ForewarnedPlugin.overlay;
+﻿using ForewarnedPlugin.EvidenceGame.Core;
 using StreamGlass.Core;
 using StreamGlass.Core.API.Overlay;
 using StreamGlass.Core.Plugin;
 
 namespace ForewarnedPlugin
 {
-    public class ForewarnedPlugin : APlugin, IAPIPlugin, IOverlayPlugin
+    public class ForewarnedPlugin : BasePlugin
     {
-        private readonly Core m_Core = new();
-        private readonly Overlay m_Overlay = new();
-
-        static ForewarnedPlugin()
+        private void AddEvidence(string evidence)
         {
-            DataHelper.RegisterSerializer(new Mejai.DataSerializer());
-            DataHelper.RegisterSerializer(new Evidence.DataSerializer());
+            Overlay.AddAssemblyResource($"assets/{evidence}.png", $"ForewarnedPlugin.overlay.assets.{evidence}.png");
+            Core.AddEvidence(evidence, $"assets/{evidence}.png");
         }
 
         public ForewarnedPlugin() : base("Forewarned")
         {
-            m_Overlay.AddRootResource("forewarned.html", new ForewarnedRootEndpoint(m_Core));
-            m_Overlay.AddAssemblyResource("forewarned.css", "ForewarnedPlugin.overlay.forewarned.css");
-            m_Overlay.AddAssemblyResource("forewarned.js", "ForewarnedPlugin.overlay.forewarned.js");
-            m_Overlay.AddAssemblyResource("assets/cross.png", "ForewarnedPlugin.overlay.assets.cross.png");
-            m_Overlay.AddAssemblyResource("assets/destruction.png", "ForewarnedPlugin.overlay.assets.destruction.png");
-            m_Overlay.AddAssemblyResource("assets/disturbed_tombs.png", "ForewarnedPlugin.overlay.assets.disturbed_tombs.png");
-            m_Overlay.AddAssemblyResource("assets/electronic_disturbance.png", "ForewarnedPlugin.overlay.assets.electronic_disturbance.png");
-            m_Overlay.AddAssemblyResource("assets/extinguish_flames.png", "ForewarnedPlugin.overlay.assets.extinguish_flames.png");
-            m_Overlay.AddAssemblyResource("assets/footsteps.png", "ForewarnedPlugin.overlay.assets.footsteps.png");
-            m_Overlay.AddAssemblyResource("assets/magnetic_distortion.png", "ForewarnedPlugin.overlay.assets.magnetic_distortion.png");
-            m_Overlay.AddAssemblyResource("assets/metallic_signature.png", "ForewarnedPlugin.overlay.assets.metallic_signature.png");
-            m_Overlay.AddAssemblyResource("assets/radar_detection.png", "ForewarnedPlugin.overlay.assets.radar_detection.png");
-            m_Overlay.AddAssemblyResource("assets/radioactivity.png", "ForewarnedPlugin.overlay.assets.radioactivity.png");
-            m_Overlay.AddAssemblyResource("assets/reanimation.png", "ForewarnedPlugin.overlay.assets.reanimation.png");
-            m_Overlay.AddAssemblyResource("assets/tremors.png", "ForewarnedPlugin.overlay.assets.tremors.png");
-            m_Overlay.AddAssemblyResource("assets/vocal_response.png", "ForewarnedPlugin.overlay.assets.vocal_response.png");
+            AddEvidence("destruction");
+            AddEvidence("disturbed_tombs");
+            AddEvidence("electronic_disturbance");
+            AddEvidence("extinguish_flames");
+            AddEvidence("footsteps");
+            AddEvidence("magnetic_distortion");
+            AddEvidence("metallic_signature");
+            AddEvidence("radar_detection");
+            AddEvidence("radioactivity");
+            AddEvidence("reanimation");
+            AddEvidence("tremors");
+            AddEvidence("vocal_response");
+
+            Core.AddEntity("Necreph", "radioactivity", "vocal_response", "extinguish_flames", "metallic_signature", "magnetic_distortion", "destruction", "disturbed_tombs", "electronic_disturbance");
+            Core.AddEntity("Rathos", "footsteps", "radar_detection", "reanimation", "extinguish_flames", "metallic_signature", "magnetic_distortion", "disturbed_tombs", "electronic_disturbance");
+            Core.AddEntity("Dekan", "footsteps", "radar_detection", "reanimation", "radioactivity", "tremors", "vocal_response", "destruction", "disturbed_tombs");
+            Core.AddEntity("Ouphris", "footsteps", "reanimation", "radioactivity", "tremors", "vocal_response", "extinguish_flames", "metallic_signature", "magnetic_distortion");
+            Core.AddEntity("Talgor", "radar_detection", "reanimation", "radioactivity", "tremors", "extinguish_flames", "magnetic_distortion", "destruction", "electronic_disturbance");
+            Core.AddEntity("Ataimon", "footsteps", "radar_detection", "tremors", "vocal_response", "metallic_signature", "destruction", "disturbed_tombs", "electronic_disturbance");
+            Core.AddEntity("Ptahmes", "footsteps", "radar_detection", "reanimation", "tremors", "vocal_response", "extinguish_flames", "destruction", "electronic_disturbance");
+
         }
 
         protected override PluginInfo GeneratePluginInfo() => new("1.0.0-beta", "ModuloCorpse<https://www.twitch.tv/chaporon_>");
-
-        protected override void OnLoad()
-        {
-            StreamGlassActions.AddAction(new ForwarnedEvidenceAction(m_Core));
-            StreamGlassActions.AddAction(new ForwarnedResetAction(m_Core));
-            StreamGlassActions.AddAction(new ForwarnedRuleOutEvidenceAction(m_Core));
-        }
 
         protected override void OnInit()
         {
@@ -87,11 +78,5 @@ namespace ForewarnedPlugin
                 { "string_source", "timer_forewarned" }
             });
         }
-
-        public Overlay[] GetOverlays() => [ m_Overlay ];
-
-        public AEndpoint[] GetEndpoints() => [ new ForewarnedEvidencesEndpoint(m_Core) ];
-
-        protected override void OnUnload() { }
     }
 }
